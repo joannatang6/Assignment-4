@@ -1,0 +1,251 @@
+---
+title: "Effects of MPA designation on lobster populations"
+author: "Joanna Tang"
+date: "11/12/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r include = FALSE}
+# Outline
+
+# 0. Load packages and read in data
+# 1. Create area graph of lobster abundance overlaid with line graph of fishing pressre (5 graphs, 1 per site)
+# 2. Boxplots of lobster sizes (1 graph of 5 side-by-sides, 1 per site); ANOVA of lobster sizes (2017)
+# 3. Boxplots of lobster sizes (5 graphs of side-by-side 2012-2017, 1 for each site); 2-sample t-tests comparing size 2012 vs 2017; ANOVA of lobster sizes (2012)
+# 4. Chi-squared + ANOVA of carapace size (chi-squared for each site, then ANOVA of chi-squared values)
+
+```
+
+```{r include = FALSE}
+# 0. Load packages and read in data
+
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(effsize)
+library(vcdExtra)
+
+lobster_size_abundance <- read_csv("lobster_size_abundance.csv")
+lobster_traps <- read_csv("Lobster_Trap_Counts_All_Years_20171219.csv")
+
+
+```
+
+```{r echo = FALSE, message = FALSE}
+
+# 1. Lobster abundance and fishing pressure (5 bar + line graphs)
+
+# Data of abundance by site and year
+abundance_by_site <- lobster_size_abundance %>% 
+  select(YEAR, SITE, COUNT) %>% 
+  group_by(SITE, YEAR) %>% 
+  summarize(
+    abundance = sum(COUNT)
+  )
+
+# Data of fishing pressure by site and year
+fishing_pressure <- lobster_traps %>% 
+  select(YEAR, MONTH, DATE, SITE, TRAPS) %>% 
+  filter(SITE == "AQUE" | SITE == "NAPL" | SITE == "MOHK" | SITE == "IVEE" | SITE == "CARP") %>% 
+  filter(TRAPS != "-99999") %>% 
+  group_by(SITE, YEAR) %>% 
+  summarize(
+    total_traps_by_month = sum(TRAPS)
+    )
+
+abundance_fishing_pressure <- ggplot(abundance_by_site, aes(x = YEAR, y = abundance)) +
+  geom_area() +
+  geom_line(data = fishing_pressure, aes(x = YEAR, y = total_traps_by_month/2)) +
+  facet_wrap(~ SITE) +
+  theme_classic() +
+  scale_y_continuous(expand = c(0,0), sec.axis = sec_axis(~.*2, name = "Traps")) +
+  scale_x_continuous(expand = c(0,0))
+
+abundance_fishing_pressure
+
+
+
+```
+
+```{r echo = FALSE, message = FALSE}
+# 2. Compare mean lobster size by site in 2017: Boxplots
+
+# Data frame of lobster size and count in 2017
+size_count <- as.data.frame(lobster_size_abundance) %>% 
+  filter(YEAR == "2017", SIZE != "-99999") %>% 
+  select(SITE, SIZE, COUNT)
+
+size_freq <- expand.dft(size_count, freq = "COUNT") # Transformed data into tidy format so every observation is a row
+
+# Side-by-side boxplots of lobster size
+lobster_size <- ggplot(size_freq, aes(x = SITE, y = SIZE)) +
+  geom_boxplot(aes(fill = SITE), show.legend = FALSE) +
+  labs(x = "Site", y = "Lobster Carapace Length (mm)") +
+  theme_classic()
+
+lobster_size
+
+```
+
+```{r include = FALSE}
+# 2. Compare mean lobster size by site in 2017: ANOVA
+
+# ANOVA of lobster size (2017)
+
+size_hists <- ggplot(size_freq, aes(x = SIZE)) +
+  geom_histogram() +
+  facet_wrap(~ SITE, scale = "free")
+size_hists
+# Exploratory histograms -- looks normal
+
+size_qq <- ggplot(size_freq, aes(sample = SIZE)) +
+  geom_qq() +
+  facet_wrap(~ SITE)
+size_qq
+# Exploratory qq-plots -- looks normal
+
+
+
+# H0: All means of lobster sizes are equal across sites
+# HA: At least 2 means differ
+
+size_2017_anova <- aov(SIZE ~ SITE, data = size_freq)
+summary(size_2017_anova)
+# F = .0085 --> at least 2 means differ
+
+# Post-hoc Tukey's HSD
+TukeyHSD(size_2017_anova)
+# NAPL-CARP p=.023, NAPL-IVEE p-.0037, NAPL-MOHK p=.058
+```
+
+
+```{r echo = FALSE, message = FALSE}
+
+# 3. Changes in lobster size at MPA and non-MPA sites (comparing 2012 vs. 2017): Boxplots
+
+# Data of just 2012 and 2017
+size_changes_count <- as.data.frame(lobster_size_abundance) %>% 
+  filter(YEAR == "2012" | YEAR == "2017", SIZE != "-99999") %>% 
+  select(YEAR, SITE, SIZE, COUNT, SBC_LTER_TRANSECT)
+
+size_changes_freq <- expand.dft(size_changes_count, freq = "COUNT") # Transformed data into tidy format so every observation is a row
+
+# Boxplots for each site
+ivee <- ggplot(filter(size_changes_freq, SITE == "IVEE"), aes(x = YEAR, y = SIZE)) +
+  geom_boxplot(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)") +
+  theme_classic()
+ivee
+
+napl <- ggplot(filter(size_changes_freq, SITE == "NAPL"), aes(x = YEAR, y = SIZE)) +
+  geom_boxplot(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)") +
+  theme_classic()
+napl
+
+aque <- ggplot(filter(size_changes_freq, SITE == "AQUE"), aes(x = YEAR, y = SIZE)) +
+  geom_boxplot(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)") +
+  theme_classic()
+aque
+
+mohk <- ggplot(filter(size_changes_freq, SITE == "MOHK"), aes(x = YEAR, y = SIZE)) +
+  geom_boxplot(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)") +
+  theme_classic()
+mohk
+
+carp <- ggplot(filter(size_changes_freq, SITE == "CARP"), aes(x = YEAR, y = SIZE)) +
+  geom_boxplot(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)") +
+  theme_classic()
+carp
+
+```
+
+```{r include = FALSE}
+
+# 3. Changes in lobster size at MPA and non-MPA sites (comparing 2012 vs. 2017): T-tests and ANOVA
+
+# Two-sample (paired) t-tests of lobster size (2012 vs. 2017 for each site)
+
+size_2012_hists <- ggplot(filter(size_changes_freq, YEAR == "2012"), aes(x = SIZE)) +
+  geom_histogram() +
+  facet_wrap(~ SITE, scale = "free")
+size_2012_hists
+# Exploratory histograms -- looks normal except for NAPL
+
+size_2017_hists <- ggplot(filter(size_changes_freq, YEAR == "2017"), aes(x = SIZE)) +
+  geom_histogram() +
+  facet_wrap(~ SITE, scale = "free")
+size_2017_hists
+# Exploratory histograms -- looks normal
+
+size_2012_qq <- ggplot(filter(size_changes_freq, YEAR == "2012"), aes(sample = SIZE)) +
+  geom_qq() +
+  facet_wrap(~ SITE)
+size_2012_qq
+# Exploratoery qq-plots -- looks normal
+
+size_2017_qq <- ggplot(filter(size_changes_freq, YEAR == "2017"), aes(sample = SIZE)) +
+  geom_qq() +
+  facet_wrap(~ SITE)
+size_2017_qq
+# Exploratoery qq-plots -- looks normal
+
+
+
+# H0: Mean lobster size in 2012 is the same as mean lobster size in 2017
+# HA: Means differ
+
+ivee_2012 <- filter(size_changes_freq, SITE == "IVEE", YEAR == "2012")
+ivee_2017 <- filter(size_changes_freq, SITE == "IVEE", YEAR == "2017")
+ivee_t <- t.test(ivee_2012$SIZE, ivee_2017$SIZE)
+ivee_t # p = .0361, means equal
+
+napl_2012 <- filter(size_changes_freq, SITE == "NAPL", YEAR == "2012")
+napl_2017 <- filter(size_changes_freq, SITE == "NAPL", YEAR == "2017")
+naple_t <- t.test(napl_2012$SIZE, napl_2017$SIZE)
+naple_t # p = .54, means equal
+
+aque_2012 <- filter(size_changes_freq, SITE == "AQUE", YEAR == "2012")
+aque_2017 <- filter(size_changes_freq, SITE == "AQUE", YEAR == "2017")
+aque_t <- t.test(aque_2012$SIZE, aque_2017$SIZE)
+aque_t # p = .19, means equal
+
+mohk_2012 <- filter(size_changes_freq, SITE == "MOHK", YEAR == "2012")
+mohk_2017 <- filter(size_changes_freq, SITE == "MOHK", YEAR == "2017")
+mohk_t <- t.test(mohk_2012$SIZE, mohk_2017$SIZE)
+mohk_t # p = .00016, means different (mean decreased)
+
+carp_2012 <- filter(size_changes_freq, SITE == "CARP", YEAR == "2012")
+carp_2017 <- filter(size_changes_freq, SITE == "CARP", YEAR == "2017")
+carp_t <- t.test(carp_2012$SIZE, carp_2017$SIZE)
+carp_t # p = .2211, means equal
+
+
+# ANOVA for 2012
+
+# H0: All means of lobster sizes are equal across sites in 2017
+# HA: At least 2 means differ
+
+size_2012_anova <- aov(SIZE ~ SITE, data = filter(size_changes_freq, YEAR == "2012"))
+summary(size_2012_anova)
+# F = .000999 --> at least 2 means differ
+
+# Post-hoc Tukey's HSD
+TukeyHSD(size_2012_anova)
+# IVEE-CARP p=.025, MOHK-IVEE p=.00062
+
+```
+
+```{r}
+# 4. Proportions of "legal" lobsters at the 5 sites in 2017
+
+```
+
