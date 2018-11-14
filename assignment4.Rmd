@@ -31,7 +31,7 @@ library(effsize)
 library(vcdExtra)
 
 lobster_size_abundance <- read_csv("lobster_size_abundance.csv")
-lobster_traps <- read_csv("Lobster_Trap_Counts_All_Years_20171219.csv")
+lobster_traps <- read_csv("lobster_traps.csv")
 
 
 ```
