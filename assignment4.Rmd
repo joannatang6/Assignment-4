@@ -15,9 +15,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # 0. Load packages and read in data
 # 1. Create area graph of lobster abundance overlaid with line graph of fishing pressre (5 graphs, 1 per site)
-# 2. Boxplots of lobster sizes (1 graph of 5 side-by-sides, 1 per site); ANOVA of lobster sizes (2017)
-# 3. Boxplots of lobster sizes (5 graphs of side-by-side 2012-2017, 1 for each site); 2-sample t-tests comparing size 2012 vs 2017; ANOVA of lobster sizes (2012)
-# 4. Chi-squared + ANOVA of carapace size (chi-squared for each site, then ANOVA of chi-squared values)
+# 2a. Boxplots of lobster sizes (1 graph of 5 side-by-sides, 1 per site)
+# 2b. ANOVA of lobster sizes (2017)
+# 3a. Boxplots of lobster sizes (5 graphs of side-by-side 2012-2017, 1 for each site)
+# 3b. 2-sample t-tests comparing size 2012 vs 2017; ANOVA of lobster sizes (2012)
+# 4a. Bar graph of proportions of carapace size (1 graph of 5 side-by-sides, 1 per site)
+# 4b. Chi-squared of carapace size across sites in 2017
 
 ```
 
@@ -29,6 +32,7 @@ library(knitr)
 library(kableExtra)
 library(effsize)
 library(vcdExtra)
+library(car)
 
 lobster_size_abundance <- read_csv("lobster_size_abundance.csv")
 lobster_traps <- read_csv("lobster_traps.csv")
@@ -73,7 +77,7 @@ abundance_fishing_pressure
 ```
 
 ```{r echo = FALSE, message = FALSE}
-# 2. Compare mean lobster size by site in 2017: Boxplots
+# 2a. Compare mean lobster size by site in 2017: Boxplots
 
 # Data frame of lobster size and count in 2017
 size_count <- as.data.frame(lobster_size_abundance) %>% 
@@ -93,9 +97,11 @@ lobster_size
 ```
 
 ```{r include = FALSE}
-# 2. Compare mean lobster size by site in 2017: ANOVA
+# 2b. Compare mean lobster size by site in 2017: ANOVA
 
 # ANOVA of lobster size (2017)
+
+# First I will make sure I satisfy assumptions of normality and equal variances
 
 size_hists <- ggplot(size_freq, aes(x = SIZE)) +
   geom_histogram() +
@@ -109,9 +115,18 @@ size_qq <- ggplot(size_freq, aes(sample = SIZE)) +
 size_qq
 # Exploratory qq-plots -- looks normal
 
+size_2017_levene <- leveneTest(SIZE ~ SITE, data = size_freq)
+size_2017_levene
+# p < .001, reject null that variances are equal...BUT I can still do ANOVA if the largest sample variance is <4x the smallest sample variance
+variances <- size_freq %>% 
+  group_by(SITE) %>% 
+  summarize(variance = var(SIZE)
+  )
+variances
+# 86*4 >205 --> can proceed with ANOVA
 
-
-# H0: All means of lobster sizes are equal across sites
+# ANOVA
+# H0: All means of lobster sizes are equal across sites in 2017
 # HA: At least 2 means differ
 
 size_2017_anova <- aov(SIZE ~ SITE, data = size_freq)
@@ -126,7 +141,7 @@ TukeyHSD(size_2017_anova)
 
 ```{r echo = FALSE, message = FALSE}
 
-# 3. Changes in lobster size at MPA and non-MPA sites (comparing 2012 vs. 2017): Boxplots
+# 3a. Changes in lobster size at MPA and non-MPA sites (comparing 2012 vs. 2017): Boxplots
 
 # Data of just 2012 and 2017
 size_changes_count <- as.data.frame(lobster_size_abundance) %>% 
@@ -170,7 +185,7 @@ carp
 
 ```{r include = FALSE}
 
-# 3. Changes in lobster size at MPA and non-MPA sites (comparing 2012 vs. 2017): T-tests and ANOVA
+# 3b. Changes in lobster size at MPA and non-MPA sites (comparing 2012 vs. 2017): T-tests and ANOVA
 
 # Two-sample (paired) t-tests of lobster size (2012 vs. 2017 for each site)
 
@@ -244,8 +259,47 @@ TukeyHSD(size_2012_anova)
 
 ```
 
-```{r}
-# 4. Proportions of "legal" lobsters at the 5 sites in 2017
+```{r echo = FALSE, message = FALSE}
+# 4a. Proportions of "legal" lobsters at the 5 sites in 2017: Bar graph
+
+# Table of proportions of legal lobsters >82.6mm
+size_prop <- size_freq %>% 
+  group_by(SITE) %>% 
+  summarize(
+    legal = sum(SIZE >= 82.6)/sum(SIZE>0),
+  )
+
+size_prop_graph <- ggplot(size_prop, aes(x = SITE, y = legal)) +
+  geom_col(aes(fill = SITE), show.legend = FALSE) +
+  labs(x = "Site", y = "Proportion of Lobsters Meeting Minimum Carapace Size") +
+  theme_classic() +
+  scale_y_continuous(expand = c(0,0))
+size_prop_graph  
+
+```
+
+```{r include = FALSE}
+
+# 4b. Proportions of "legal" lobsters at the 5 sites in 2017: Chi-squared
+
+# Contingency table
+legal_size_counts <- size_freq %>% 
+  mutate(legal = case_when(SIZE > 82.6 ~ "Legal", SIZE < 92.6 ~ "Too Small")) %>% 
+  count(SITE, legal) %>% 
+  spread(legal, n) %>% 
+  select(-SITE)
+rownames(legal_size_counts) <- c("AQUE", "CARP", "IVEE", "MOHK", "NAPL")
+
+# Table of proportions
+legal_size_prop <- prop.table(as.matrix(legal_size_counts), 1)
+
+# Chi-squared
+# H0: There is no association between proportion of legal lobsters and site
+# HA: There is an association
+
+size_chi <- chisq.test(legal_size_prop)
+size_chi
+# p = .9985, no significant association
 
 ```
 
