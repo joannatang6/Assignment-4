@@ -2,7 +2,9 @@
 title: "Effects of MPA designation on lobster populations"
 author: "Joanna Tang"
 date: "11/12/2018"
-output: html_document
+output:
+  html_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -15,9 +17,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # 0. Load packages and read in data
 # 1. Create area graph of lobster abundance overlaid with line graph of fishing pressre (5 graphs, 1 per site)
-# 2a. Boxplots of lobster sizes (1 graph of 5 side-by-sides, 1 per site)
+# 2a. Column graph of lobster sizes (1 graph of 5 side-by-sides, 1 per site)
 # 2b. ANOVA of lobster sizes (2017)
-# 3a. Boxplots of lobster sizes (5 graphs of side-by-side 2012-2017, 1 for each site)
+# 3a. Column graph of lobster sizes (1 graph of 5 side-by-side 2012-2017, 2 columns for each site)
 # 3b. 2-sample t-tests comparing size 2012 vs 2017; ANOVA of lobster sizes (2012)
 # 4a. Bar graph of proportions of carapace size (1 graph of 5 side-by-sides, 1 per site)
 # 4b. Chi-squared of carapace size across sites in 2017
@@ -65,7 +67,7 @@ fishing_pressure <- lobster_traps %>%
 abundance_fishing_pressure <- ggplot(abundance_by_site, aes(x = YEAR, y = abundance)) +
   geom_area() +
   geom_line(data = fishing_pressure, aes(x = YEAR, y = total_traps_by_month/2)) +
-  facet_wrap(~ SITE) +
+  facet_wrap(~ SITE, scales = "free") +
   theme_classic() +
   scale_y_continuous(expand = c(0,0), sec.axis = sec_axis(~.*2, name = "Traps")) +
   scale_x_continuous(expand = c(0,0))
@@ -77,7 +79,7 @@ abundance_fishing_pressure
 ```
 
 ```{r echo = FALSE, message = FALSE}
-# 2a. Compare mean lobster size by site in 2017: Boxplots
+# 2a. Compare mean lobster size by site in 2017: Column graph
 
 # Data frame of lobster size and count in 2017
 size_count <- as.data.frame(lobster_size_abundance) %>% 
@@ -86,9 +88,18 @@ size_count <- as.data.frame(lobster_size_abundance) %>%
 
 size_freq <- expand.dft(size_count, freq = "COUNT") # Transformed data into tidy format so every observation is a row
 
-# Side-by-side boxplots of lobster size
-lobster_size <- ggplot(size_freq, aes(x = SITE, y = SIZE)) +
-  geom_boxplot(aes(fill = SITE), show.legend = FALSE) +
+# Summary table of mean and sd of sizes
+size_freq_summary <- size_freq %>% 
+  group_by(SITE) %>% 
+  summarize(
+    mean = mean(SIZE),
+    sd = sd(SIZE)
+  )
+
+# Side-by-side column graphs of mean sizes in 2017
+lobster_size <- ggplot(size_freq_summary, aes(x = SITE, y = mean)) +
+  geom_col(aes(fill = SITE), show.legend = FALSE) +
+  geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .5)) +
   labs(x = "Site", y = "Lobster Carapace Length (mm)") +
   theme_classic()
 
@@ -139,9 +150,9 @@ TukeyHSD(size_2017_anova)
 ```
 
 
-```{r echo = FALSE, message = FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 
-# 3a. Changes in lobster size at MPA and non-MPA sites (comparing 2012 vs. 2017): Boxplots
+# 3a. Changes in lobster size at MPA and non-MPA sites (comparing 2012 vs. 2017): Column graph
 
 # Data of just 2012 and 2017
 size_changes_count <- as.data.frame(lobster_size_abundance) %>% 
@@ -150,7 +161,28 @@ size_changes_count <- as.data.frame(lobster_size_abundance) %>%
 
 size_changes_freq <- expand.dft(size_changes_count, freq = "COUNT") # Transformed data into tidy format so every observation is a row
 
-# Boxplots for each site
+# Summary table of  2012 and 2017 mean and sd
+size_changes_summary <- size_changes_freq %>% 
+  group_by(SITE, YEAR) %>% 
+  summarize(
+    mean = mean(SIZE),
+    sd = sd(SIZE)
+  )
+
+# Side-by-side (2012 vs 2017) column graphs for mean sizes at each site
+size_changes_graph <- ggplot(size_changes_summary, aes(x = SITE, y = mean)) +
+  geom_col(aes(fill = as.factor(YEAR)), position = "dodge", stat = "identity") +
+  geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .5, fill = as.factor(YEAR)), position = "dodge", stat = "identity") +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)") +
+  theme_classic()
+size_changes_graph
+
+```
+
+```{r include = FALSE}
+# 3a. Alternate graphs: Boxplots
+
+# Boxplots for each site (2012 vs 2017)
 ivee <- ggplot(filter(size_changes_freq, SITE == "IVEE"), aes(x = YEAR, y = SIZE)) +
   geom_boxplot(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
   labs(x = "Year", y = "Lobster Carapace Length (mm)") +
@@ -182,6 +214,8 @@ carp <- ggplot(filter(size_changes_freq, SITE == "CARP"), aes(x = YEAR, y = SIZE
 carp
 
 ```
+
+
 
 ```{r include = FALSE}
 
@@ -221,7 +255,7 @@ size_2017_qq
 ivee_2012 <- filter(size_changes_freq, SITE == "IVEE", YEAR == "2012")
 ivee_2017 <- filter(size_changes_freq, SITE == "IVEE", YEAR == "2017")
 ivee_t <- t.test(ivee_2012$SIZE, ivee_2017$SIZE)
-ivee_t # p = .0361, means equal
+ivee_t # p = .0361, means different
 
 napl_2012 <- filter(size_changes_freq, SITE == "NAPL", YEAR == "2012")
 napl_2017 <- filter(size_changes_freq, SITE == "NAPL", YEAR == "2017")
@@ -297,9 +331,9 @@ legal_size_prop <- prop.table(as.matrix(legal_size_counts), 1)
 # H0: There is no association between proportion of legal lobsters and site
 # HA: There is an association
 
-size_chi <- chisq.test(legal_size_prop)
+size_chi <- chisq.test(legal_size_counts)
 size_chi
-# p = .9985, no significant association
+# p = .00099, sig diff
 
 ```
 
