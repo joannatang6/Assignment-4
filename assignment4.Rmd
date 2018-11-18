@@ -1,16 +1,42 @@
 ---
-title: "Effects of MPA designation on lobster populations"
+title: "Effects of MPA designation and fishing pressure on the California spiny lobster (_Panulirus interruptus_)"
 author: "Joanna Tang, Michelle Lee, & Rachel Behm"
-date: "11/12/2018"
-output:
-  html_document: default
-  word_document: default
+
+date: "19 November 2018"
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+# INTRODUCTION
 
+The California spiny lobster (_Panulirus interruptus_) is one of the most commercially and economically important lobsters in their native range off the American West Coast (citation). The California Department of Fish and Wildlife (CDFW) estimate that nearly 600,000 individual spiny lobsters were harvested (both recreational and commercial) in the first half of the 2008-2009 season (citation). This number is, on average, half the total harvest from Mexico (citation). Given their economic importance, there are heavy restrictions on the fish season by both the CDFW and the Mexican government, with set harvest season dates, catch limits, and size restrictions (greater than 82.5-82.6 mm) (citation). Moreover, in 2012, Marine Protected Area (MPA) sites were established off the coast of California--excluding fishing activity for the protection of natural and cultural resources. These restrictions insure the sustainability of the fishery and the health of the kelp forest ecosystem in which they live and provide a unique opportunity to understand the direct impacts on spiny lobster populations.
+  
+While the California spiny lobster remains an important fishery, the species also plays an integral part in the marine communities of the giant kelp forest. _P. interruptus_ is not only an important food source for many predatory species such as the California sheephead, giant sea bass, cabezone, and several species of shark, but it is also a vital predator of sea urchins, clams, muscles, and worms. Given their important role in maintaining ecosystem balance in the kelp forests off the Pacific coast, understanding the human impacts on this species will allow us to better predict the health of these kelp forest ecosystems.
+  
+MPAs, like those off the coast of California, have been established across the United States marine areas in order to protect ecosystems, preserve cultural resources, and sustain fishery populations (citation). Studies have shown that the implementation of these protected areas have consistently increased the biomass of fished species both inside and outside of MPAs, indicating that these sites, overall, have improved the robustness and health of marine organisms (citation). For many fished species, like the spiny lobster, these biomass increases have important implications for the health and reproductive success as species typically reach sexual maturity with at a certain size. Thus, understanding the direct impacts of MPAs on spiny lobster abundance and size in relation to fishing pressure will allow us to foreshadow the future of the species and the ecosystems where they live. 
+
+Here we will compare California spiny lobster catch and size in the Santa Barbara Channel from 2012 to 2017 to better understand how MPAs affect the species and the giant kelp ecosystem. These data were collected by the Santa Barbara Coast Long Term Ecological Research Program (SBC LTER) as an ongoing effort to monitor the impacts of management on marine habitats.
+
+# METHODS
+
+## _Data Collection_
+
+Lobster size, abundance, and fishing pressure of _P. interruptus_ were collected from 2012-2017 at five SBC LTER Sites off the mainland coast of the Santa Barbara Channel: Arroyo Quemado (AQUE), Naples Reef (NAPL), Mohawk Reef (MOHK), Isla Vista (IVEE), and Carpinteria (CARP). Two of the sites (NAPL and IVEE) are located in or near CDFW MPAs, while the other three (AQUE, MOHK, and CARP) are not. Abundance and size data were collected annually by divers in the late summer before the start of the fishing season. Fishing pressure was determined by counting the number of commerical trap floats. Data were collected every two to four weeks during the lobster fishing season (October to March) (data citation). 
+
+## _Statistical Analyses_
+
+All statistical analyses and figures were created in R (version 3.4.2).
+
+_Lobster size across sites_
+
+
+
+_The affect of MPA status_
+
+_Proportion of "legal" lobsters across sites_
+To compare the propotion of legal lobster catch sizes across sites, we used a chi-square test 
 
 ```{r include = FALSE}
 # Outline
@@ -80,7 +106,9 @@ abundance_fishing_pressure
 ```
 
 ```{r echo = FALSE, message = FALSE}
-# 2a. Compare mean lobster size by site in 2017: Column graph
+
+#2a. Compare mean lobster size by site in 2017: Column graph
+
 
 # Data frame of lobster size and count in 2017
 size_count <- as.data.frame(lobster_size_abundance) %>% 
@@ -102,7 +130,7 @@ size_freq_summary <- size_freq %>%
 lobster_size <- ggplot(size_freq_summary, aes(x = SITE, y = mean)) +
   geom_col(aes(fill = SITE), show.legend = FALSE) +
   geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .5)) +
-  labs(x = "Site", y = "Lobster Carapace Length (mm)") +
+  labs(x = "Site", y = "Lobster Carapace Length (mm)")
 
 # Side-by-side boxplots of lobster size
 lobster_size <- ggplot(size_freq, aes(x = SITE, y = SIZE)) +
@@ -385,4 +413,15 @@ size_chi
 # p = .00099, sig diff
 
 ```
+
+
+# Conclusions
+
+Given that spiny lobsters remain, and will remain, economically important for both California and Mexico, understanding the implications of managed and protected lobster habitats is vital for the future of the species and the fishery.
+
+# References
+
+Caselle, JE, Rassweiler, A, Hamilton, SL, and Warner, RR. 2015. Recovery trajectories of kelp forest animals are rapid yet spatially variable across a network of temperate marine protected areas. Scientific Reports: 14102. 
+
+Reed, D. 2017. SBC LTER: Reef: Abundance, size and fishing effort for California Spiny Lobster (_Panulirus interruptus_), ongoing since 2012. Santa Barbara Coastal Long Term Ecological Research Project. doi:10.6073/pasta/81ce20b29614ec99d85d54907eaa3e8e.
 
