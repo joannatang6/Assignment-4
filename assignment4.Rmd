@@ -132,12 +132,6 @@ lobster_size <- ggplot(size_freq_summary, aes(x = SITE, y = mean)) +
   geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .5)) +
   labs(x = "Site", y = "Lobster Carapace Length (mm)")
 
-# Side-by-side boxplots of lobster size
-lobster_size <- ggplot(size_freq, aes(x = SITE, y = SIZE)) +
-  geom_boxplot(aes(fill = SITE), show.legend = FALSE) +
-  labs(x = "Site", y = "Lobster Carapace Length (mm)", title= "Mean lobster size by site in 2017") +
-  theme_classic()
-
 lobster_size
 
 ```
