@@ -1,6 +1,6 @@
 ---
 title: "Effects of MPA designation on lobster populations"
-author: "Joanna Tang"
+author: "Joanna Tang, Michelle Lee, & Rachel Behm"
 date: "11/12/2018"
 output:
   html_document: default
@@ -65,12 +65,13 @@ fishing_pressure <- lobster_traps %>%
     )
 
 abundance_fishing_pressure <- ggplot(abundance_by_site, aes(x = YEAR, y = abundance)) +
-  geom_area() +
+  geom_area(aes(fill = SITE), show.legend = FALSE) +
   geom_line(data = fishing_pressure, aes(x = YEAR, y = total_traps_by_month/2)) +
   facet_wrap(~ SITE, scales = "free") +
   theme_classic() +
-  scale_y_continuous(expand = c(0,0), sec.axis = sec_axis(~.*2, name = "Traps")) +
-  scale_x_continuous(expand = c(0,0))
+  scale_y_continuous(expand = c(0,0), sec.axis = sec_axis(~.*2, name = "Number of Traps")) +
+  scale_x_continuous(expand = c(0,0)) +
+  labs(x= "Year", title="Lobster abundance and fishing pressure (2012 - 2017)", y= "Spiny Lobster Abundance")
 
 abundance_fishing_pressure
 
@@ -88,6 +89,7 @@ size_count <- as.data.frame(lobster_size_abundance) %>%
 
 size_freq <- expand.dft(size_count, freq = "COUNT") # Transformed data into tidy format so every observation is a row
 
+
 # Summary table of mean and sd of sizes
 size_freq_summary <- size_freq %>% 
   group_by(SITE) %>% 
@@ -101,6 +103,11 @@ lobster_size <- ggplot(size_freq_summary, aes(x = SITE, y = mean)) +
   geom_col(aes(fill = SITE), show.legend = FALSE) +
   geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .5)) +
   labs(x = "Site", y = "Lobster Carapace Length (mm)") +
+
+# Side-by-side boxplots of lobster size
+lobster_size <- ggplot(size_freq, aes(x = SITE, y = SIZE)) +
+  geom_boxplot(aes(fill = SITE), show.legend = FALSE) +
+  labs(x = "Site", y = "Lobster Carapace Length (mm)", title= "Mean lobster size by site in 2017") +
   theme_classic()
 
 lobster_size
@@ -155,10 +162,11 @@ TukeyHSD(size_2017_anova)
 # 3a. Changes in lobster size at MPA and non-MPA sites (comparing 2012 vs. 2017): Column graph
 
 # Data of just 2012 and 2017
+#lobster_size_abundance$YEAR = as.character(lobster_size_abundance)
+
 size_changes_count <- as.data.frame(lobster_size_abundance) %>% 
   filter(YEAR == "2012" | YEAR == "2017", SIZE != "-99999") %>% 
   select(YEAR, SITE, SIZE, COUNT, SBC_LTER_TRANSECT)
-
 size_changes_freq <- expand.dft(size_changes_count, freq = "COUNT") # Transformed data into tidy format so every observation is a row
 
 # Summary table of  2012 and 2017 mean and sd
@@ -185,34 +193,75 @@ size_changes_graph
 # Boxplots for each site (2012 vs 2017)
 ivee <- ggplot(filter(size_changes_freq, SITE == "IVEE"), aes(x = YEAR, y = SIZE)) +
   geom_boxplot(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
-  labs(x = "Year", y = "Lobster Carapace Length (mm)") +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)", title = "Changes in lobster size at Isla Vista from 2012 vs. 2017") +
   theme_classic()
 ivee
 
+iveecol <- ggplot(filter(size_changes_freq, SITE == "IVEE", YEAR == "2012" | YEAR == "2017"), aes(x= YEAR,  y= SIZE)) +
+  geom_col(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)", title = "Changes in lobster size at Isla Vista from 2012 vs. 2017") +
+  theme_classic()
+iveecol
+################################################################################################################################
 napl <- ggplot(filter(size_changes_freq, SITE == "NAPL"), aes(x = YEAR, y = SIZE)) +
   geom_boxplot(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
-  labs(x = "Year", y = "Lobster Carapace Length (mm)") +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)", title = "Changes in lobster size at Naples from 2012 vs. 2017") +
   theme_classic()
 napl
 
+naplcol <- ggplot(filter(size_changes_freq, SITE == "NAPL", YEAR == "2012" | YEAR == "2017"), aes(x= YEAR,  y= SIZE)) +
+  geom_col(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)", title = "Changes in lobster size at Naples from 2012 vs. 2017") +
+  theme_classic()
+naplcol
+###############################################################################################################################
 aque <- ggplot(filter(size_changes_freq, SITE == "AQUE"), aes(x = YEAR, y = SIZE)) +
   geom_boxplot(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
-  labs(x = "Year", y = "Lobster Carapace Length (mm)") +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)", title = "Changes in lobster size at Arroyo Quemado from 2012 vs. 2017") +
   theme_classic()
 aque
 
+aquecol <- ggplot(filter(size_changes_freq, SITE == "AQUE", YEAR == "2012" | YEAR == "2017"), aes(x= YEAR,  y= SIZE)) +
+  geom_col(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)", title = "Changes in lobster size at Arroyo Quemado from 2012 vs. 2017") +
+  theme_classic()
+aquecol
+#################################################################################################################################
 mohk <- ggplot(filter(size_changes_freq, SITE == "MOHK"), aes(x = YEAR, y = SIZE)) +
   geom_boxplot(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
-  labs(x = "Year", y = "Lobster Carapace Length (mm)") +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)",title = "Changes in lobster size at Mohawk from 2012 vs. 2017") +
   theme_classic()
 mohk
 
+mohkcol <- ggplot(filter(size_changes_freq, SITE == "MOHK", YEAR == "2012" | YEAR == "2017"), aes(x= YEAR,  y= SIZE)) +
+  geom_col(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)", title = "Changes in lobster size at Mohawk from 2012 vs. 2017") +
+  theme_classic()
+mohkcol
+##################################################################################################################################
 carp <- ggplot(filter(size_changes_freq, SITE == "CARP"), aes(x = YEAR, y = SIZE)) +
   geom_boxplot(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
-  labs(x = "Year", y = "Lobster Carapace Length (mm)") +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)",title = "Changes in lobster size at Carpinteria from 2012 vs. 2017") +
   theme_classic()
 carp
 
+carpcol <- ggplot(filter(size_changes_freq, SITE == "CARP", YEAR == "2012" | YEAR == "2017"), aes(x= YEAR,  y= SIZE)) +
+  geom_col(aes(group = YEAR, fill = YEAR), show.legend = FALSE) +
+  labs(x = "Year", y = "Lobster Carapace Length (mm)", title = "Changes in lobster size at Carpinteriafrom 2012 vs. 2017") +
+  theme_classic()
+carpcol
+#################################################################################################################################
+allbox<-ggplot(size_changes_freq, aes(x = YEAR, y = SIZE)) +
+  geom_boxplot(aes(group = YEAR, fill = YEAR), show.legend = FALSE) + facet_wrap(~SITE)
+  labs(x = "Year", y = "Lobster Carapace Length (mm)",title = "Changes in lobster size at Carpinteria from 2012 vs. 2017") +
+  theme_classic()
+allbox 
+
+allcol<-ggplot(size_changes_freq, aes(x = YEAR, y = SIZE)) +
+  geom_col(aes(group = YEAR, fill = YEAR), show.legend = TRUE) + facet_wrap(~SITE)
+  labs(x = "Year", y = "Lobster Carapace Length (mm)",title = "Changes in lobster size at Carpinteria from 2012 vs. 2017") +
+  theme_classic()
+allcol  
 ```
 
 
