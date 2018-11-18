@@ -59,12 +59,13 @@ fishing_pressure <- lobster_traps %>%
     )
 
 abundance_fishing_pressure <- ggplot(abundance_by_site, aes(x = YEAR, y = abundance)) +
-  geom_area() +
+  geom_area(aes(fill = SITE), show.legend = FALSE) +
   geom_line(data = fishing_pressure, aes(x = YEAR, y = total_traps_by_month/2)) +
   facet_wrap(~ SITE) +
   theme_classic() +
-  scale_y_continuous(expand = c(0,0), sec.axis = sec_axis(~.*2, name = "Traps")) +
-  scale_x_continuous(expand = c(0,0))
+  scale_y_continuous(expand = c(0,0), sec.axis = sec_axis(~.*2, name = "Number of Traps")) +
+  scale_x_continuous(expand = c(0,0)) +
+  labs(x= "Year", title="Lobster abundance and fishing pressure (2012 - 2017)", y= "Spiny Lobster Abundance")
 
 abundance_fishing_pressure
 
