@@ -61,11 +61,8 @@ library(kableExtra)
 library(effsize)
 library(vcdExtra)
 library(car)
-<<<<<<< HEAD
 library(RColorBrewer)
-=======
 library(ggsignif)
->>>>>>> 7ef2af0a2b3122ecae83739229bdaa6ecd5a364b
 
 lobster_size_abundance <- read_csv("lobster_size_abundance.csv")
 lobster_traps <- read_csv("lobster_traps.csv")
@@ -139,36 +136,20 @@ size_freq_summary <- size_freq %>%
 # Side-by-side column graphs of mean sizes in 2017
 lobster_size <- ggplot(size_freq_summary, aes(x = SITE, y = mean)) +
   geom_col(aes(fill = SITE), show.legend = FALSE) +
-<<<<<<< HEAD
-  geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .5))
+  geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .4)) +
+  geom_signif(stat="identity",
+              data = data.frame(x=c(1.875, 2.875),
+                                xend = c(5,5),
+                                y = c(95, 90),
+                                annotation = c("*", "**")),
+          aes(x=x,
+                  xend=xend,
+                  y=y,
+                  yend=y,
+                  annotation=annotation)) +
   labs(x = "Site", y = "Lobster Carapace Length (mm)") +
-  scale_y_continuous(expand = c(0,0)) +
   theme_classic()
-
-=======
-  geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .5)) + 
-  geom_signif(stat="identity", data = data.frame(x=c(0.875, 1.875), xend=c(10, 10),
-                              y=c(90, 100), annotation=c("**", "NS")),
-              aes(x=x,xend=xend, y=y, yend=y, annotation=annotation))
   
-  
-  
-  
-  
-  
-  geom_signif(stat="identity", comparisons = list(c("CARP", "NAPL")), map_signif_level=TRUE, annotations = c("*")) +
-  geom_signif(stat="identity", comparisons = list(c("IVEE", "NAPL")), map_signif_level = TRUE, annotations = c("**"))+
-  labs(x = "Site", y = "Lobster Carapace Length (mm)", title = "Lobster size by site in 2017")
-
-?position_dodge
-
-geom_signif(stat="identity",
-              data=data.frame(x=c(0.875, 1.875), xend=c(1.125, 2.125),
-                              y=c(90, 100), annotation=c("**", "NS")),
-              aes(x=x,xend=xend, y=y, yend=y, annotation=annotation)) +
-  geom_signif(comparisons=list(c("S1", "S2")), annotations="***",
-              y_position = 9.3, tip_length = 0, vjust=0.4)  
->>>>>>> 7ef2af0a2b3122ecae83739229bdaa6ecd5a364b
 lobster_size
 
 ```
