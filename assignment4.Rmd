@@ -61,6 +61,7 @@ library(kableExtra)
 library(effsize)
 library(vcdExtra)
 library(car)
+library(RColorBrewer)
 
 lobster_size_abundance <- read_csv("lobster_size_abundance.csv")
 lobster_traps <- read_csv("lobster_traps.csv")
@@ -91,13 +92,14 @@ fishing_pressure <- lobster_traps %>%
     )
 
 abundance_fishing_pressure <- ggplot(abundance_by_site, aes(x = YEAR, y = abundance)) +
-  geom_area(aes(fill = SITE), show.legend = FALSE) +
+  geom_area(aes(fill = SITE)) +
   geom_line(data = fishing_pressure, aes(x = YEAR, y = total_traps_by_month/2)) +
-  facet_wrap(~ SITE, scales = "free") +
+  facet_wrap(~ SITE, scales = "free_x") +
   theme_classic() +
   scale_y_continuous(expand = c(0,0), sec.axis = sec_axis(~.*2, name = "Number of Traps")) +
   scale_x_continuous(expand = c(0,0)) +
-  labs(x= "Year", title="Lobster abundance and fishing pressure (2012 - 2017)", y= "Spiny Lobster Abundance")
+  labs(x= "Year", title="Lobster abundance and fishing pressure (2012 - 2017)", y= "Spiny Lobster Abundance") +
+  theme(panel.spacing = unit(2, "lines"))
 
 abundance_fishing_pressure
 
@@ -129,8 +131,10 @@ size_freq_summary <- size_freq %>%
 # Side-by-side column graphs of mean sizes in 2017
 lobster_size <- ggplot(size_freq_summary, aes(x = SITE, y = mean)) +
   geom_col(aes(fill = SITE), show.legend = FALSE) +
-  geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .5)) +
-  labs(x = "Site", y = "Lobster Carapace Length (mm)")
+  geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .5))
+  labs(x = "Site", y = "Lobster Carapace Length (mm)") +
+  scale_y_continuous(expand = c(0,0)) +
+  theme_classic()
 
 lobster_size
 
@@ -196,16 +200,21 @@ size_changes_summary <- size_changes_freq %>%
   group_by(SITE, YEAR) %>% 
   summarize(
     mean = mean(SIZE),
-    sd = sd(SIZE)
+    sd = sd(SIZE), 
+    median = median(SIZE)
   )
 
-# Side-by-side (2012 vs 2017) column graphs for mean sizes at each site
+# Side-by-side (2012 vs 2017) column graphs for mean sizes at non-MPAs
 size_changes_graph <- ggplot(size_changes_summary, aes(x = SITE, y = mean)) +
   geom_col(aes(fill = as.factor(YEAR)), position = "dodge", stat = "identity") +
-  geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .5, fill = as.factor(YEAR)), position = "dodge", stat = "identity") +
-  labs(x = "Year", y = "Lobster Carapace Length (mm)") +
-  theme_classic()
+  geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .4, fill = as.factor(YEAR)), position = "dodge", stat = "identity") +
+  labs(x = "Site", y = "Lobster Carapace Length (mm)", fill = "Year") +
+  theme_classic()+
+  scale_y_continuous(expand = c(0,0)) +
+  scale_fill_brewer(palette = "Paired")
+
 size_changes_graph
+
 
 ```
 
@@ -298,7 +307,7 @@ size_2012_hists <- ggplot(filter(size_changes_freq, YEAR == "2012"), aes(x = SIZ
   geom_histogram() +
   facet_wrap(~ SITE, scale = "free")
 size_2012_hists
-# Exploratory histograms -- looks normal except for NAPL
+# Exploratory histograms -- looks normal except for NAPL and IVEE
 
 size_2017_hists <- ggplot(filter(size_changes_freq, YEAR == "2017"), aes(x = SIZE)) +
   geom_histogram() +
@@ -310,44 +319,69 @@ size_2012_qq <- ggplot(filter(size_changes_freq, YEAR == "2012"), aes(sample = S
   geom_qq() +
   facet_wrap(~ SITE)
 size_2012_qq
-# Exploratoery qq-plots -- looks normal
+# Exploratoery qq-plots -- looks normal except for NAPL and IVEE
 
 size_2017_qq <- ggplot(filter(size_changes_freq, YEAR == "2017"), aes(sample = SIZE)) +
   geom_qq() +
   facet_wrap(~ SITE)
 size_2017_qq
-# Exploratoery qq-plots -- looks normal
+# Exploratory qq-plots -- looks normal
 
 
-
+# Two-sample t-tests for all sites (2012 vs 2017)
 # H0: Mean lobster size in 2012 is the same as mean lobster size in 2017
 # HA: Means differ
 
+ivee_var <- filter(size_changes_freq, SITE == "IVEE") %>% 
+ var.test(SIZE ~ YEAR, data = .)
+ivee_var # p = .307, variances not equal
 ivee_2012 <- filter(size_changes_freq, SITE == "IVEE", YEAR == "2012")
 ivee_2017 <- filter(size_changes_freq, SITE == "IVEE", YEAR == "2017")
 ivee_t <- t.test(ivee_2012$SIZE, ivee_2017$SIZE)
-ivee_t # p = .0361, means different
+ivee_t # p = .0361, means DIFFERENT (mean increased)
 
+napl_var <- filter(size_changes_freq, SITE == "NAPL") %>% 
+ var.test(SIZE ~ YEAR, data = .)
+napl_var # p = .77, variances not equal
 napl_2012 <- filter(size_changes_freq, SITE == "NAPL", YEAR == "2012")
 napl_2017 <- filter(size_changes_freq, SITE == "NAPL", YEAR == "2017")
 naple_t <- t.test(napl_2012$SIZE, napl_2017$SIZE)
 naple_t # p = .54, means equal
 
+aque_var <- filter(size_changes_freq, SITE == "AQUE") %>% 
+ var.test(SIZE ~ YEAR, data = .)
+aque_var # p = .298, variances not equal
 aque_2012 <- filter(size_changes_freq, SITE == "AQUE", YEAR == "2012")
 aque_2017 <- filter(size_changes_freq, SITE == "AQUE", YEAR == "2017")
 aque_t <- t.test(aque_2012$SIZE, aque_2017$SIZE)
 aque_t # p = .19, means equal
 
+mohk_var <- filter(size_changes_freq, SITE == "MOHK") %>% 
+ var.test(SIZE ~ YEAR, data = .)
+mohk_var # p = .15, variances not equal
 mohk_2012 <- filter(size_changes_freq, SITE == "MOHK", YEAR == "2012")
 mohk_2017 <- filter(size_changes_freq, SITE == "MOHK", YEAR == "2017")
 mohk_t <- t.test(mohk_2012$SIZE, mohk_2017$SIZE)
-mohk_t # p = .00016, means different (mean decreased)
+mohk_t # p = .00016, means DIFFERENT (mean decreased)
 
+carp_var <- filter(size_changes_freq, SITE == "CARP") %>% 
+ var.test(SIZE ~ YEAR, data = .)
+carp_var # p = .204, variances not equal
 carp_2012 <- filter(size_changes_freq, SITE == "CARP", YEAR == "2012")
 carp_2017 <- filter(size_changes_freq, SITE == "CARP", YEAR == "2017")
 carp_t <- t.test(carp_2012$SIZE, carp_2017$SIZE)
 carp_t # p = .2211, means equal
 
+
+# Mann-Whitney U's for MPAs
+# H0: Ranks of lobster sizes in 2012 is the same as ranks in 2017
+# HA: Ranks are different in 2012 and 2017
+
+ivee_mwu <- wilcox.test(ivee_2012$SIZE, ivee_2017$SIZE)
+ivee_mwu # p = .0085, ranks different
+
+napl_mwu <- wilcox.test(napl_2012$SIZE, napl_2017$SIZE)
+napl_mwu # p = .439, ranks the same
 
 # ANOVA for 2012
 
