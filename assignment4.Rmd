@@ -61,6 +61,7 @@ library(kableExtra)
 library(effsize)
 library(vcdExtra)
 library(car)
+library(ggsignif)
 
 lobster_size_abundance <- read_csv("lobster_size_abundance.csv")
 lobster_traps <- read_csv("lobster_traps.csv")
@@ -104,6 +105,7 @@ abundance_fishing_pressure
 
 
 ```
+
 Overall, spiny lobster abundance has increased at all sites from 2012 to 2017. At the non-MPA sites (AQUE, CARP, MOHK) fishing pressure has decreased from 2012 to 2017. All sites besides CARP experienced a decrease in spiny lobster abundance in 2015. Fishing pressure and spiny lobster abundance are inversely proportional, the abundance never increased with fishing pressure. 
 At site AQUE, spiny lobster abundance has stayed relatively low from 2012 to 2017, with a slight increase during 2013. Fishing pressure at this site remained relatively high until 2016 where there is a steep drop off. At site CARP, spiny lobster abundance also stayed relatively low until 2015 where it started to drastically increase and continued to do so through 2016. Fishing pressure at this site was high until a massive decrease in 2016. At site MOHK, spiny lobster abundance decreased in 2012, slightly increased in 2013, massively increased in 2014, and then began slightly decreasing from 2015 to 2017. 
 At the MPA site IVEE, spiny lobster abundance started low in 2012 then increased through 2014, with a drop in 2015, then a drastic rise through 2016. At the MPA site NAPL, spiny lobster abundance steadily grew from 2012 through 2014, with a drop in 2015, and then stabilized through 2016.
@@ -132,15 +134,11 @@ size_freq_summary <- size_freq %>%
 # Side-by-side column graphs of mean sizes in 2017
 lobster_size <- ggplot(size_freq_summary, aes(x = SITE, y = mean)) +
   geom_col(aes(fill = SITE), show.legend = FALSE) +
-  geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .5)) +
-  labs(x = "Site", y = "Lobster Carapace Length (mm)")
+  geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .5)) + 
+  geom_signif(comparisons = list(c("NAPL", " CARP"), c("NAPL","CARP")), map_signif_level=TRUE, annotations = c("*", "**")) +
+  labs(x = "Site", y = "Lobster Carapace Length (mm)", title = "Lobster size by site in 2017")
 
-# Side-by-side boxplots of lobster size
-lobster_size <- ggplot(size_freq, aes(x = SITE, y = SIZE)) +
-  geom_boxplot(aes(fill = SITE), show.legend = FALSE) +
-  labs(x = "Site", y = "Lobster Carapace Length (mm)", title= "Mean lobster size by site in 2017") +
-  theme_classic()
-
+  
 lobster_size
 
 ```
