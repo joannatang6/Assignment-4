@@ -1,6 +1,0 @@
----
-title: "Assignment 4"
-author: "Rachel Behm"
-date: "November 17, 2018"
-output: html_document
----
