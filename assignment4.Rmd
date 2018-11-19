@@ -11,8 +11,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 # INTRODUCTION
 
+
+The California spiny lobster (_Panulirus interruptus_) is one of the most commercially and economically important lobsters in their native range off the American West Coast^1^. The California Department of Fish and Wildlife (CDFW) estimate that nearly 600,000 individual spiny lobsters were harvested (both recreational and commercial) in the first half of the 2008-2009 season^2^. This number is, on average, half the total harvest from Mexico (citation). Given their economic importance, there are heavy restrictions on the fish season by both the CDFW and the Mexican government, with set harvest season dates, catch limits, and size restrictions (greater than 82.5-82.6 mm) (citation). Moreover, in 2012, Marine Protected Area (MPA) sites were established off the coast of California--excluding fishing activity for the protection of natural and cultural resources. These restrictions insure the sustainability of the fishery and the health of the kelp forest ecosystem in which they live and provide a unique opportunity to understand the direct impacts on spiny lobster populations.
+
+
 The California spiny lobster (_Panulirus interruptus_) is one of the most commercially and economically important lobsters in their native range off the American West Coast^1^. The California Department of Fish and Wildlife (CDFW) estimate that nearly 600,000 individual spiny lobsters were harvested (both recreational and commercial) in the first half of the 2008-2009 season^2^. This number is, on average, half the total harvest from Mexico^3^. Given their economic importance, there are heavy restrictions on the fish season by both the CDFW and the Mexican government, with set harvest season dates, catch limits, and size restrictions (greater than 82.5-82.6 mm). Moreover, in 2012, Marine Protected Area (MPA) sites were established off the coast of California--excluding fishing activity for the protection of natural and cultural resources. These restrictions insure the sustainability of the fishery and the health of the kelp forest ecosystem in which they live and provide a unique opportunity to understand the direct impacts on spiny lobster populations.
   
+
 While the California spiny lobster remains an important fishery, the species also plays an integral part in the marine communities of the giant kelp forest. _P. interruptus_ is not only an important food source for many predatory species such as the California sheephead, giant sea bass, cabezone, and several species of shark, but it is also a vital predator of sea urchins, clams, muscles, and worms. Given their important role in maintaining ecosystem balance in the kelp forests off the Pacific coast, understanding the human impacts on this species will allow us to better predict the health of these kelp forest ecosystems.
   
 MPAs, like those off the coast of California, have been established across the United States marine areas in order to protect ecosystems, preserve cultural resources, and sustain fishery populations^4^. Studies have shown that the implementation of these protected areas have consistently increased the biomass of fished species both inside and outside of MPAs, indicating that these sites, overall, have improved the robustness and health of marine organisms^5^. For many fished species, like the spiny lobster, these biomass increases have important implications for the health and reproductive success as species typically reach sexual maturity with at a certain size. Thus, understanding the direct impacts of MPAs on spiny lobster abundance and size in relation to fishing pressure will allow us to foreshadow the future of the species and the ecosystems where they live. 
@@ -21,21 +26,29 @@ Here we will compare California spiny lobster catch and size in the Santa Barbar
 
 # METHODS
 
-## _Data Collection_
+## _Data Collection_  
 
 Lobster size, abundance, and fishing pressure of _P. interruptus_ were collected from 2012-2017 at five SBC LTER Sites off the mainland coast of the Santa Barbara Channel: Arroyo Quemado (AQUE), Naples Reef (NAPL), Mohawk Reef (MOHK), Isla Vista (IVEE), and Carpinteria (CARP). Two of the sites (NAPL and IVEE) are located in or near CDFW MPAs, while the other three (AQUE, MOHK, and CARP) are not. Abundance and size data were collected annually by divers in the late summer before the start of the fishing season. Fishing pressure was determined by counting the number of commerical trap floats. Data were collected every two to four weeks during the lobster fishing season (October to March)^6^. 
 
-## _Statistical Analyses_
+## _Statistical Analyses_  
 All statistical analyses and figures were created in R (version 3.4.2).
 
-_Lobster size across sites_
+_Lobster size across sites_  
 To compare lobster size across sites, we used lobster size data collected from all sites for 2017. We then conducted an ANOVA test and a post-hoc Tukey’s HSD test to find differences among sites.
 
+<<<<<<< HEAD
 _The affect of MPA status_
-To compare lobster sizes between MPA and non-MPA sites, we used size data from 2012 and 2017. First, we tested for normality of data across all sites. For sites with normally distributed data, we tested for equal variances using Levene’s test. We then proceeded with two-sample, two-tailed t-tests. For sites with non-normally distributed data, we used two-sampled, two-tailed Mann-Whitney U tests. 
+To compare lobster sizes between MPA and non-MPA sites, we used size data from 2012 and 2017. First, we tested for normality of data across all sites, and determined that our data are normally distributed. We then proceeded with two-sample, two-tailed t-tests to find differences between 2012 and 2017 lobster sizes at each site.
 
 _Proportion of "legal" lobsters across sites_
+In order to test for the proportion of legal-sized lobsters (carapace length over 82.6 mm) at all sites in 2017, we conducted a chi-squared, using lobster size data. 
+
+_The affect of MPA status_  
+To compare lobster sizes between MPA and non-MPA sites, we used size data from 2012 and 2017. First, we tested for normality of data across all sites. For sites with normally distributed data, we tested for equal variances using Levene’s test. We then proceeded with two-sample, two-tailed t-tests. For sites with non-normally distributed data, we used two-sampled, two-tailed Mann-Whitney U tests. 
+
+_Proportion of "legal" lobsters across sites_  
 In order to test for the proportion of legal-sized lobsters (carapace length over 82.6 mm) at all sites in 2017, we conducted an ANOVA test, using lobster size data. 
+
 
 
 ```{r include = FALSE}
@@ -92,14 +105,15 @@ fishing_pressure <- lobster_traps %>%
     total_traps_by_month = sum(TRAPS)
     )
 
-abundance_fishing_pressure <- ggplot(abundance_by_site, aes(x = YEAR, y = abundance)) +
+abundance_fishing_pressure <- ggplot(abundance_by_site, aes(x = YEAR, y = abundance, displ, cty)) +
   geom_area(aes(fill = SITE), show.legend = FALSE) +
   geom_line(data = fishing_pressure, aes(x = YEAR, y = total_traps_by_month/2)) +
   facet_wrap(~ SITE, scales = "free_x") +
   theme_classic() +
   scale_y_continuous(expand = c(0,0), sec.axis = sec_axis(~.*2, name = "Number of Traps")) +
+  theme_classic() + 
   scale_x_continuous(expand = c(0,0)) +
-  labs(x= "Year", title="Lobster abundance and fishing pressure (2012 - 2017)", y= "Spiny Lobster Abundance") +
+  labs(x= "Year", title="Lobster abundance and fishing pressure (2012 - 2017)", y= "Lobster Abundance") +
   theme(panel.spacing = unit(2, "lines"))
 
 abundance_fishing_pressure
@@ -108,11 +122,13 @@ abundance_fishing_pressure
 
 ```
 
-Overall, spiny lobster abundance has increased at all sites from 2012 to 2017. At the non-MPA sites (AQUE, CARP, MOHK) fishing pressure has decreased from 2012 to 2017. All sites besides CARP experienced a decrease in spiny lobster abundance in 2015. Fishing pressure and spiny lobster abundance are inversely proportional, the abundance never increased with fishing pressure. 
-At site AQUE, spiny lobster abundance has stayed relatively low from 2012 to 2017, with a slight increase during 2013. Fishing pressure at this site remained relatively high until 2016 where there is a steep drop off. At site CARP, spiny lobster abundance also stayed relatively low until 2015 where it started to drastically increase and continued to do so through 2016. Fishing pressure at this site was high until a massive decrease in 2016. At site MOHK, spiny lobster abundance decreased in 2012, slightly increased in 2013, massively increased in 2014, and then began slightly decreasing from 2015 to 2017. 
-At the MPA site IVEE, spiny lobster abundance started low in 2012 then increased through 2014, with a drop in 2015, then a drastic rise through 2016. At the MPA site NAPL, spiny lobster abundance steadily grew from 2012 through 2014, with a drop in 2015, and then stabilized through 2016.
+Overall, spiny lobster abundance has increased at all sites from 2012 to 2017. At the non-MPA sites (AQUE, CARP, and MOHK), fishing pressure has decreased from 2012 to 2017. All sites besides CARP experienced a decrease in spiny lobster abundance in 2015.
+
+At the non-MPA sites, fishing pressure and spiny lobster abundance are inversely proportional; that is, the abundance never increased with fishing pressure. At AQUE, spiny lobster abundance has stayed relatively low from 2012 (38 lobsters) to 2017 (67 lobsters), with a slight increase during 2013 (100 lobsters). Fishing pressure at this site remained relatively high until 2016 where there is a steep drop off. At CARP, spiny lobster abundance also stayed relatively low (78 lobsters) until 2015 where it started to drastically increase (231 lobsters) and continued to do so through 2016 (705 lobsters). Fishing pressure at this site was high until a massive decrease in 2016, coinciding with the spike in abundance. At MOHK, spiny lobster abundance decreased in 2012(83 lobsters to 15), slightly increased in 2013 (34 lobsters), massively increased in 2014 (296 lobsters), and then began slightly decreasing from 2015 to 2017 (178 lobsters by 2017). Overall, fishing pressure has decreased over time and abundance has increased over time, and this trend can be seen most clearly at CARP.
+
+The two MPA sites exhibit different trends in lobster abundance over time. At the MPA site IVEE, spiny lobster abundance started low in 2012 (26 lobsters) then increased through 2014 (361 lobsters), with a drop in 2015 (193 lobsters), then a drastic rise through 2016 (606 lobsters). At the MPA site NAPL, spiny lobster abundance steadily grew from 2012 (6 lobsters) through 2014 (270 lobsters), with a drop in 2015 (127 lobsters), and then slightly decreased through 2016 (112 lobsters).
   
-Surprisingly, there aren’t overarching trends that show an association between MPA designation and lobster population abundance. Thus, there is an underlying driver of population abundances other than fishing pressure and MPA designation alone. 
+It is interesting to note that there are not overarching trends that show an association between MPA designation and lobster  abundance over time. In 2017, the site with the lowest lobster abundance is a non-MPA (AQUE, 67 lobsters), but CARP, also a non-MPA site, had the highest abundance (705 lobsters). While the site with the second-highest abundance is an MPA (IVEE, 606 lobsters), the other MPA (NAPL) had a lower 2017 lobster abundance (112 lobsters) than two non-MPAs (CARP and MOHK, 705 and 178 lobsters respectively). This shows that fishing pressure and MPA designation alone do not explain lobster abundance.
 
 ```{r echo = FALSE, message = FALSE}
 
@@ -200,7 +216,7 @@ TukeyHSD(size_2017_anova)
 
 Mean lobster size (mm) in 2017 across all five sites (n(AQUE) = 67; n(CARP) = 705; n(IVEE) = 606; n(MOHK) = 178; n(NAPL) = 112) are normally distributed. From our ANOVA, we found that mean lobster size (mm) across sites differ significantly (F (4, 1163) = 3.42, _p_ = 0.01, $\alpha$ = 0.05).
 
-After performing a post-hoc Tukey’s HSD test, we conclude that mean lobster size at NAPL differs significantly from CARP (diff = 4.00 mm, *p* = 0.02), Isla Vista (diff = 4.78 mm, *p* < 0.01). MOHK was fairly different when compared to NAPL, but was not statistically significant (diff = 4.23 mm, *p* = 0.06). NAPL also had the greatest mean lobster size (76.23 mm), suggesting that the lobster population at NAPL is the most robust or healthy. Largely, these differences do not appear to be biologically significant as it represents less than 6% of the total carapace size for a theoretical individual. 
+After performing a post-hoc Tukey’s HSD test, we conclude that our significant ANOVA result is driven by mean lobster sizes at NAPL, IVEE, and CARP. Mean lobster size at NAPL differs significantly from CARP (diff = 4.00 mm, *p* = 0.02), Isla Vista (diff = 4.78 mm, *p* < 0.01). MOHK was fairly different when compared to NAPL, but was not statistically significant (diff = 4.23 mm, *p* = 0.06). NAPL also had the greatest mean lobster size (76.23 mm), suggesting that the lobster population at NAPL is the most robust or healthy. Largely, these differences do not appear to be biologically significant as it represents less than 6% of the total carapace size for a theoretical individual.
 
 As we saw with Figure 1, we did not see any underlying trend of MPA designation as a predictor of lobster carapace length (mm). Interestingly, we found the largest difference in carapace length and the largest associated p-value was between the two MPA sites (IVEE and NAPL).
 
@@ -232,8 +248,17 @@ size_changes_graph <- ggplot(size_changes_summary, aes(x = SITE, y = mean)) +
   geom_col(aes(fill = as.factor(YEAR)), position = "dodge", stat = "identity") +
   geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .4, fill = as.factor(YEAR)), position = "dodge", stat = "identity") +
   labs(x = "Site", y = "Lobster Carapace Length (mm)", fill = "Year") +
-  theme_classic()+
-  scale_y_continuous(expand = c(0,0)) +
+  geom_signif(stat="identity",
+              data = data.frame(x=c(2.7, 4.4),
+                                xend = c(3.3,3.7),
+                                y = c(90, 90),
+                                annotation = c("*", "**")),
+          aes(x=x,
+                  xend=xend,
+                  y=y,
+                  yend=y,
+                  annotation=annotation)) +
+  theme_classic() +
   scale_fill_brewer(palette = "Paired")
 
 size_changes_graph
@@ -446,7 +471,7 @@ size_prop <- size_freq %>%
 
 size_prop_graph <- ggplot(size_prop, aes(x = SITE, y = legal)) +
   geom_col(aes(fill = SITE), show.legend = FALSE) +
-  labs(x = "Site", y = "Proportion of Lobsters Meeting Minimum Carapace Size") +
+  labs(x = "Site", y = "Proportion of Legal Lobsters") +
   theme_classic() +
   scale_y_continuous(expand = c(0,0))
 size_prop_graph  
