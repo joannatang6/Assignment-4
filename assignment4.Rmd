@@ -36,7 +36,7 @@ All statistical analyses and figures were created in R (version 3.4.2).
 _Lobster size across sites_  
 To compare lobster size across sites, we used lobster size data collected from all sites for 2017. We then conducted an ANOVA test and a post-hoc Tukey’s HSD test to find differences among sites.
 
-<<<<<<< HEAD
+
 _The affect of MPA status_
 To compare lobster sizes between MPA and non-MPA sites, we used size data from 2012 and 2017. First, we tested for normality of data across all sites, and determined that our data are normally distributed. We then proceeded with two-sample, two-tailed t-tests to find differences between 2012 and 2017 lobster sizes at each site.
 
@@ -83,7 +83,7 @@ lobster_traps <- read_csv("lobster_traps.csv")
 
 ```
 
-```{r echo = FALSE, message = FALSE}
+```{r echo = FALSE, message = FALSE, warning=FALSE}
 
 # 1. Lobster abundance and fishing pressure (5 bar + line graphs)
 
@@ -113,7 +113,7 @@ abundance_fishing_pressure <- ggplot(abundance_by_site, aes(x = YEAR, y = abunda
   scale_y_continuous(expand = c(0,0), sec.axis = sec_axis(~.*2, name = "Number of Traps")) +
   theme_classic() + 
   scale_x_continuous(expand = c(0,0)) +
-  labs(x= "Year", title="Lobster abundance and fishing pressure (2012 - 2017)", y= "Lobster Abundance") +
+  labs(x= "Year", y= "Lobster Abundance") +
   theme(panel.spacing = unit(2, "lines"))
 
 abundance_fishing_pressure
@@ -121,6 +121,8 @@ abundance_fishing_pressure
 
 
 ```
+
+__Figure 1. Spiny lobster abundance and fishing pressure from 2012-2017 across all sites.__  *Mean site lobster abundance represented in colored area and fishing pressure in black line for all sites: AQUE, NAPL, MOHK, IVEE, and CARP from 2012-2017. Very generally, we see an increase in lobster abundance across most sites and an overall decrease in fishing pressure in non-MPA sites.*
 
 Overall, spiny lobster abundance has increased at all sites from 2012 to 2017. At the non-MPA sites (AQUE, CARP, and MOHK), fishing pressure has decreased from 2012 to 2017. All sites besides CARP experienced a decrease in spiny lobster abundance in 2015.
 
@@ -171,6 +173,8 @@ lobster_size <- ggplot(size_freq_summary, aes(x = SITE, y = mean)) +
 lobster_size
 
 ```
+
+__Figure 2. Spiny lobster size (mm) across all sites (2017).__ *Mean spiny lobster carapace size (mm) in 2017 across all five sites: ((n(AQUE) = 67; n(CARP) = 705; n(IVEE) = 606; n(MOHK) = 178; n(NAPL) = 112). Error bars indicate ± 1 standard deviation from the mean. Carapace size only differed between NAPL and both IVEE and CARP. Asterisks represent significant differences between different groups (i.e. one versus 2 asterisks).*
 
 ```{r include = FALSE}
 # 2b. Compare mean lobster size by site in 2017: ANOVA
@@ -265,6 +269,8 @@ size_changes_graph
 
 
 ```
+
+__Figure 3. Spiny Lobster sizes in 2012 versus 2017 across sites.__ *Mean spiny lobster carapace length (mm) in 2012 compared to 2017 across all sites. Error bars indicate ± 1 standard deviation from the mean. Carapace size only differed IVEE and MOHK. Asterisks represent significant differences (_p_ < 0.05) between different groups (i.e. one versus 2 asterisks).*
 
 ```{r include = FALSE}
 # 3a. Alternate graphs: Boxplots
@@ -477,6 +483,8 @@ size_prop_graph <- ggplot(size_prop, aes(x = SITE, y = legal)) +
 size_prop_graph  
 
 ```
+
+__Figure 4. Proportion of “legal” sized lobsters in 2017 across all sites.__ *Proportion of lobsters with carapace size over 82.6 mm (legal minimum catch length) across all sites in 2017. We saw a significant difference in expected proportions (proportions equal) ($\chi$^2^(4) = 18.50, _p_ < 0.001, $\alpha$ = 0.05).*
 
 ```{r include = FALSE}
 
