@@ -486,6 +486,8 @@ Across all sites and throughout our analyses, we found that MPA designation is n
 
 Given that spiny lobsters remain, and will remain, economically important for both California and Mexico, understanding the implications of managed and protected lobster habitats is vital for the future of the species and the fishery.
 
+In this study, our response variables are spiny lobster abundance and carapace length (in mm), which are common variables in quantifying community structure. However, our input variables are only MPA designation and fishing pressure, which are not sufficient enough predictors of lobster community to make any reliable claims.  Food availability, water quality, predation pressure, temperature, and other biotic and abiotic factors must be given priority when trying to analyze these different sites. Without including these variables, we can only assume that MPA designation will have some sort of variation even though we can’t quantify it with this data. Fishing pressure is not a bad variable but it is not enough by itself.
+
 # References
 1. Holthuis, LB. 1991. “_Panulirus interruptus_”. FAO Species Catalogue, Volume 13. Marine Lobsters of the World. FAO Fisheries Synopsis No. 125. Food and Agriculture Organization. Pp. 142-143. ISBN 95-5-103027-8.
   
