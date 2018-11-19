@@ -21,20 +21,20 @@ Here we will compare California spiny lobster catch and size in the Santa Barbar
 
 # METHODS
 
-## _Data Collection_
+## _Data Collection_  
 
 Lobster size, abundance, and fishing pressure of _P. interruptus_ were collected from 2012-2017 at five SBC LTER Sites off the mainland coast of the Santa Barbara Channel: Arroyo Quemado (AQUE), Naples Reef (NAPL), Mohawk Reef (MOHK), Isla Vista (IVEE), and Carpinteria (CARP). Two of the sites (NAPL and IVEE) are located in or near CDFW MPAs, while the other three (AQUE, MOHK, and CARP) are not. Abundance and size data were collected annually by divers in the late summer before the start of the fishing season. Fishing pressure was determined by counting the number of commerical trap floats. Data were collected every two to four weeks during the lobster fishing season (October to March)^6^. 
 
-## _Statistical Analyses_
+## _Statistical Analyses_  
 All statistical analyses and figures were created in R (version 3.4.2).
 
-_Lobster size across sites_
+_Lobster size across sites_  
 To compare lobster size across sites, we used lobster size data collected from all sites for 2017. We then conducted an ANOVA test and a post-hoc Tukey’s HSD test to find differences among sites.
 
-_The affect of MPA status_
+_The affect of MPA status_  
 To compare lobster sizes between MPA and non-MPA sites, we used size data from 2012 and 2017. First, we tested for normality of data across all sites. For sites with normally distributed data, we tested for equal variances using Levene’s test. We then proceeded with two-sample, two-tailed t-tests. For sites with non-normally distributed data, we used two-sampled, two-tailed Mann-Whitney U tests. 
 
-_Proportion of "legal" lobsters across sites_
+_Proportion of "legal" lobsters across sites_  
 In order to test for the proportion of legal-sized lobsters (carapace length over 82.6 mm) at all sites in 2017, we conducted an ANOVA test, using lobster size data. 
 
 
