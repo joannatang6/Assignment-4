@@ -26,17 +26,17 @@ Here we will compare California spiny lobster catch and size in the Santa Barbar
 Lobster size, abundance, and fishing pressure of _P. interruptus_ were collected from 2012-2017 at five SBC LTER Sites off the mainland coast of the Santa Barbara Channel: Arroyo Quemado (AQUE), Naples Reef (NAPL), Mohawk Reef (MOHK), Isla Vista (IVEE), and Carpinteria (CARP). Two of the sites (NAPL and IVEE) are located in or near CDFW MPAs, while the other three (AQUE, MOHK, and CARP) are not. Abundance and size data were collected annually by divers in the late summer before the start of the fishing season. Fishing pressure was determined by counting the number of commerical trap floats. Data were collected every two to four weeks during the lobster fishing season (October to March) (data citation). 
 
 ## _Statistical Analyses_
-
 All statistical analyses and figures were created in R (version 3.4.2).
 
 _Lobster size across sites_
-
-
+To compare lobster size across sites, we used lobster size data collected from all sites for 2017. We then conducted an ANOVA test and a post-hoc Tukey’s HSD test to find differences among sites.
 
 _The affect of MPA status_
+To compare lobster sizes between MPA and non-MPA sites, we used size data from 2012 and 2017. First, we tested for normality of data across all sites. For sites with normally distributed data, we tested for equal variances using Levene’s test. We then proceeded with two-sample, two-tailed t-tests. For sites with non-normally distributed data, we used two-sampled, two-tailed Mann-Whitney U tests. 
 
 _Proportion of "legal" lobsters across sites_
-To compare the propotion of legal lobster catch sizes across sites, we used a chi-square test 
+In order to test for the proportion of legal-sized lobsters (carapace length over 82.6 mm) at all sites in 2017, we conducted an ANOVA test, using lobster size data. 
+
 
 ```{r include = FALSE}
 # Outline
@@ -112,6 +112,8 @@ abundance_fishing_pressure
 Overall, spiny lobster abundance has increased at all sites from 2012 to 2017. At the non-MPA sites (AQUE, CARP, MOHK) fishing pressure has decreased from 2012 to 2017. All sites besides CARP experienced a decrease in spiny lobster abundance in 2015. Fishing pressure and spiny lobster abundance are inversely proportional, the abundance never increased with fishing pressure. 
 At site AQUE, spiny lobster abundance has stayed relatively low from 2012 to 2017, with a slight increase during 2013. Fishing pressure at this site remained relatively high until 2016 where there is a steep drop off. At site CARP, spiny lobster abundance also stayed relatively low until 2015 where it started to drastically increase and continued to do so through 2016. Fishing pressure at this site was high until a massive decrease in 2016. At site MOHK, spiny lobster abundance decreased in 2012, slightly increased in 2013, massively increased in 2014, and then began slightly decreasing from 2015 to 2017. 
 At the MPA site IVEE, spiny lobster abundance started low in 2012 then increased through 2014, with a drop in 2015, then a drastic rise through 2016. At the MPA site NAPL, spiny lobster abundance steadily grew from 2012 through 2014, with a drop in 2015, and then stabilized through 2016.
+  
+Surprisingly, there aren’t overarching trends that show an association between MPA designation and lobster population abundance. Thus, there is an underlying driver of population abundances other than fishing pressure and MPA designation alone. 
 
 ```{r echo = FALSE, message = FALSE}
 
@@ -196,6 +198,13 @@ summary(size_2017_anova)
 TukeyHSD(size_2017_anova)
 # NAPL-CARP p=.023, NAPL-IVEE p-.0037, NAPL-MOHK p=.058
 ```
+
+Mean lobster size (mm) in 2017 across all five sites (n(AQUE) = 67; n(CARP) = 705; n(IVEE) = 606; n(MOHK) = 178; n(NAPL) = 112) are normally distributed. From our ANOVA, we found that mean lobster size (mm) across sites differ significantly (F (4, 1163) = 3.42, p = 0.01, $\alpha$ = 0.05).
+
+After performing a post-hoc Tukey’s HSD test, we conclude that mean lobster size at NAPL differs significantly from CARP (diff = 4.00 mm, *p* = 0.02), Isla Vista (diff = 4.78 mm, *p* < 0.01). MOHK was fairly different when compared to NAPL, but was not statistically significant (diff = 4.23 mm, *p* = 0.06). NAPL also had the greatest mean lobster size (76.23 mm), suggesting that the lobster population at NAPL is the most robust or healthy. Largely, these differences do not appear to be biologically significant as it represents less than 6% of the total carapace size for a theoretical individual. 
+
+As we saw with Figure 1, we did not see any underlying trend of MPA designation as a predictor of lobster carapace length (mm). Interestingly, we found the largest difference in carapace length and the largest associated p-value was between the two MPA sites (IVEE and NAPL).
+
 
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
@@ -422,6 +431,19 @@ TukeyHSD(size_2012_anova)
 
 ```
 
+We found that lobster sizes across sites between 2012 and 2017 were fairly normally distributed. Thus, we proceeded with two-sample, two-tailed t-tests to compare lobster sizes between the two sampling years. This test was repeated across all sites.
+
+Between MPA sites
+There is no consistency between both IVEE and NAPL, the two MPA sites, on lobster size differences between 2012 and 2017. Isla Vista had showed a significant difference in lobster mean sizes between 2012 and 2017 (t (28.09) = -2.20, p = 0.04, $\alpha$ = 0.05). NAPL, on the other hand, showed no difference in size between years (t (5.52) = -0.66, p = 0.54, $\alpha$ = 0.05).
+
+Between non-MPA sites
+Similar to the MPA sites, there is no consistency between AQUE, MOHK, and CARP, the non-MPA sites, on lobster size differences between 2012 and 2017. AQUE showed no significant difference in lobster mean sizes between 2012 and 2017 (t (87.35) = -1.32, p = 0.19, $\alpha$ = 0.05). CARP similarly showed no significant difference in lobster mean sizes (t (91.46) = 1.23, p = 0.22, $\alpha$ = 0.05). MOHK, on the other hand, showed a significant difference in size between years (t (142.79) = 3.89, p < 0.01, $\alpha$ = 0.05).
+
+The two sites with significant differences in carapace length were NAPL, an MPA site, and MOHK, a non-MPA site. 
+
+
+
+
 ```{r echo = FALSE, message = FALSE}
 # 4a. Proportions of "legal" lobsters at the 5 sites in 2017: Bar graph
 
@@ -466,13 +488,17 @@ size_chi
 
 ```
 
+We found proportions of “legal” sized lobsters in catch across sites in 2017 to be significantly different ($\chi^2^$(4) = 18.50, p < 0.001, $\alpha$ = 0.05). Coinciding with our lobster size results across all sites for 2017, we found that NAPL has the greatest proportion of “legal” sized lobsters. 
+
 
 # Conclusions
+Across all sites and throughout our analyses, we found that MPA designation is not the primary determinant of lobster size or abundance. Although, the site with the greatest differences with spiny lobster size was an MPA, this trend was largely driven by NAPL and not IVEE. However, if we look at our first analysis of spiny lobster abundance, we can see that abundance showed a nearly reverse trend—where IVEE had one of the highest abundance levels and NAPL did not. Overall, this may indicate some sort of size-abundance trade-off where a particular site may only be able to host a certain biomass of lobster.  
 
 Given that spiny lobsters remain, and will remain, economically important for both California and Mexico, understanding the implications of managed and protected lobster habitats is vital for the future of the species and the fishery.
 
 # References
-
+1. Holthuis, LB. 1991. “_Panulirus interruptus_”. FAO Species Catalogue, Volume 13. Marine Lobsters of the World. FAO Fisheries Synopsis No. 125. Food and Agriculture Organization. Pp. 142-143. ISBN 95-5-103027-8.
+  
 Caselle, JE, Rassweiler, A, Hamilton, SL, and Warner, RR. 2015. Recovery trajectories of kelp forest animals are rapid yet spatially variable across a network of temperate marine protected areas. Scientific Reports: 14102. 
 
 Reed, D. 2017. SBC LTER: Reef: Abundance, size and fishing effort for California Spiny Lobster (_Panulirus interruptus_), ongoing since 2012. Santa Barbara Coastal Long Term Ecological Research Project. doi:10.6073/pasta/81ce20b29614ec99d85d54907eaa3e8e.
