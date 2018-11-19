@@ -199,7 +199,7 @@ TukeyHSD(size_2017_anova)
 # NAPL-CARP p=.023, NAPL-IVEE p-.0037, NAPL-MOHK p=.058
 ```
 
-Mean lobster size (mm) in 2017 across all five sites (n(AQUE) = 67; n(CARP) = 705; n(IVEE) = 606; n(MOHK) = 178; n(NAPL) = 112) are normally distributed. From our ANOVA, we found that mean lobster size (mm) across sites differ significantly (F (4, 1163) = 3.42, p = 0.01, $\alpha$ = 0.05).
+Mean lobster size (mm) in 2017 across all five sites (n(AQUE) = 67; n(CARP) = 705; n(IVEE) = 606; n(MOHK) = 178; n(NAPL) = 112) are normally distributed. From our ANOVA, we found that mean lobster size (mm) across sites differ significantly (F (4, 1163) = 3.42, _p_ = 0.01, $\alpha$ = 0.05).
 
 After performing a post-hoc Tukey’s HSD test, we conclude that mean lobster size at NAPL differs significantly from CARP (diff = 4.00 mm, *p* = 0.02), Isla Vista (diff = 4.78 mm, *p* < 0.01). MOHK was fairly different when compared to NAPL, but was not statistically significant (diff = 4.23 mm, *p* = 0.06). NAPL also had the greatest mean lobster size (76.23 mm), suggesting that the lobster population at NAPL is the most robust or healthy. Largely, these differences do not appear to be biologically significant as it represents less than 6% of the total carapace size for a theoretical individual. 
 
@@ -434,10 +434,10 @@ TukeyHSD(size_2012_anova)
 We found that lobster sizes across sites between 2012 and 2017 were fairly normally distributed. Thus, we proceeded with two-sample, two-tailed t-tests to compare lobster sizes between the two sampling years. This test was repeated across all sites.
 
 Between MPA sites
-There is no consistency between both IVEE and NAPL, the two MPA sites, on lobster size differences between 2012 and 2017. Isla Vista had showed a significant difference in lobster mean sizes between 2012 and 2017 (t (28.09) = -2.20, p = 0.04, $\alpha$ = 0.05). NAPL, on the other hand, showed no difference in size between years (t (5.52) = -0.66, p = 0.54, $\alpha$ = 0.05).
+There is no consistency between both IVEE and NAPL, the two MPA sites, on lobster size differences between 2012 and 2017. Isla Vista had showed a significant difference in lobster mean sizes between 2012 and 2017 (t (28.09) = -2.20, _p_ = 0.04, $\alpha$ = 0.05). NAPL, on the other hand, showed no difference in size between years (t (5.52) = -0.66, _p_ = 0.54, $\alpha$ = 0.05).
 
 Between non-MPA sites
-Similar to the MPA sites, there is no consistency between AQUE, MOHK, and CARP, the non-MPA sites, on lobster size differences between 2012 and 2017. AQUE showed no significant difference in lobster mean sizes between 2012 and 2017 (t (87.35) = -1.32, p = 0.19, $\alpha$ = 0.05). CARP similarly showed no significant difference in lobster mean sizes (t (91.46) = 1.23, p = 0.22, $\alpha$ = 0.05). MOHK, on the other hand, showed a significant difference in size between years (t (142.79) = 3.89, p < 0.01, $\alpha$ = 0.05).
+Similar to the MPA sites, there is no consistency between AQUE, MOHK, and CARP, the non-MPA sites, on lobster size differences between 2012 and 2017. AQUE showed no significant difference in lobster mean sizes between 2012 and 2017 (t (87.35) = -1.32, _p_ = 0.19, $\alpha$ = 0.05). CARP similarly showed no significant difference in lobster mean sizes (t (91.46) = 1.23, _p_ = 0.22, $\alpha$ = 0.05). MOHK, on the other hand, showed a significant difference in size between years (t (142.79) = 3.89, _p_ < 0.01, $\alpha$ = 0.05).
 
 The two sites with significant differences in carapace length were NAPL, an MPA site, and MOHK, a non-MPA site. 
 
@@ -488,7 +488,7 @@ size_chi
 
 ```
 
-We found proportions of “legal” sized lobsters in catch across sites in 2017 to be significantly different ($\chi^2^$(4) = 18.50, p < 0.001, $\alpha$ = 0.05). Coinciding with our lobster size results across all sites for 2017, we found that NAPL has the greatest proportion of “legal” sized lobsters. 
+We found proportions of “legal” sized lobsters in catch across sites in 2017 to be significantly different ($\chi$^2^(4) = 18.50, _p_ < 0.001, $\alpha$ = 0.05). Coinciding with our lobster size results across all sites for 2017, we found that NAPL has the greatest proportion of “legal” sized lobsters. 
 
 
 # Conclusions
