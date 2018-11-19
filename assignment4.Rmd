@@ -92,14 +92,15 @@ fishing_pressure <- lobster_traps %>%
     total_traps_by_month = sum(TRAPS)
     )
 
-abundance_fishing_pressure <- ggplot(abundance_by_site, aes(x = YEAR, y = abundance)) +
+abundance_fishing_pressure <- ggplot(abundance_by_site, aes(x = YEAR, y = abundance, displ, cty)) +
   geom_area(aes(fill = SITE), show.legend = FALSE) +
   geom_line(data = fishing_pressure, aes(x = YEAR, y = total_traps_by_month/2)) +
   facet_wrap(~ SITE, scales = "free_x") +
   theme_classic() +
   scale_y_continuous(expand = c(0,0), sec.axis = sec_axis(~.*2, name = "Number of Traps")) +
+  theme_classic() + 
   scale_x_continuous(expand = c(0,0)) +
-  labs(x= "Year", title="Lobster abundance and fishing pressure (2012 - 2017)", y= "Spiny Lobster Abundance") +
+  labs(x= "Year", title="Lobster abundance and fishing pressure (2012 - 2017)", y= "Lobster Abundance") +
   theme(panel.spacing = unit(2, "lines"))
 
 abundance_fishing_pressure
@@ -223,8 +224,17 @@ size_changes_graph <- ggplot(size_changes_summary, aes(x = SITE, y = mean)) +
   geom_col(aes(fill = as.factor(YEAR)), position = "dodge", stat = "identity") +
   geom_errorbar(aes(ymin = mean-sd, ymax = mean+sd, width = .4, fill = as.factor(YEAR)), position = "dodge", stat = "identity") +
   labs(x = "Site", y = "Lobster Carapace Length (mm)", fill = "Year") +
-  theme_classic()+
-  scale_y_continuous(expand = c(0,0)) +
+  geom_signif(stat="identity",
+              data = data.frame(x=c(2.7, 4.4),
+                                xend = c(3.3,3.7),
+                                y = c(90, 90),
+                                annotation = c("*", "**")),
+          aes(x=x,
+                  xend=xend,
+                  y=y,
+                  yend=y,
+                  annotation=annotation)) +
+  theme_classic() +
   scale_fill_brewer(palette = "Paired")
 
 size_changes_graph
@@ -424,7 +434,7 @@ size_prop <- size_freq %>%
 
 size_prop_graph <- ggplot(size_prop, aes(x = SITE, y = legal)) +
   geom_col(aes(fill = SITE), show.legend = FALSE) +
-  labs(x = "Site", y = "Proportion of Lobsters Meeting Minimum Carapace Size") +
+  labs(x = "Site", y = "Proportion of Legal Lobsters") +
   theme_classic() +
   scale_y_continuous(expand = c(0,0))
 size_prop_graph  
