@@ -32,10 +32,10 @@ _Lobster size across sites_
 To compare lobster size across sites, we used lobster size data collected from all sites for 2017. We then conducted an ANOVA test and a post-hoc Tukey’s HSD test to find differences among sites.
 
 _The affect of MPA status_
-To compare lobster sizes between MPA and non-MPA sites, we used size data from 2012 and 2017. First, we tested for normality of data across all sites. For sites with normally distributed data, we tested for equal variances using Levene’s test. We then proceeded with two-sample, two-tailed t-tests. For sites with non-normally distributed data, we used two-sampled, two-tailed Mann-Whitney U tests. 
+To compare lobster sizes between MPA and non-MPA sites, we used size data from 2012 and 2017. First, we tested for normality of data across all sites, and determined that our data are normally distributed. We then proceeded with two-sample, two-tailed t-tests to find differences between 2012 and 2017 lobster sizes at each site.
 
 _Proportion of "legal" lobsters across sites_
-In order to test for the proportion of legal-sized lobsters (carapace length over 82.6 mm) at all sites in 2017, we conducted an ANOVA test, using lobster size data. 
+In order to test for the proportion of legal-sized lobsters (carapace length over 82.6 mm) at all sites in 2017, we conducted a chi-squared, using lobster size data. 
 
 
 ```{r include = FALSE}
@@ -109,11 +109,13 @@ abundance_fishing_pressure
 
 ```
 
-Overall, spiny lobster abundance has increased at all sites from 2012 to 2017. At the non-MPA sites (AQUE, CARP, MOHK) fishing pressure has decreased from 2012 to 2017. All sites besides CARP experienced a decrease in spiny lobster abundance in 2015. Fishing pressure and spiny lobster abundance are inversely proportional, the abundance never increased with fishing pressure. 
-At site AQUE, spiny lobster abundance has stayed relatively low from 2012 to 2017, with a slight increase during 2013. Fishing pressure at this site remained relatively high until 2016 where there is a steep drop off. At site CARP, spiny lobster abundance also stayed relatively low until 2015 where it started to drastically increase and continued to do so through 2016. Fishing pressure at this site was high until a massive decrease in 2016. At site MOHK, spiny lobster abundance decreased in 2012, slightly increased in 2013, massively increased in 2014, and then began slightly decreasing from 2015 to 2017. 
-At the MPA site IVEE, spiny lobster abundance started low in 2012 then increased through 2014, with a drop in 2015, then a drastic rise through 2016. At the MPA site NAPL, spiny lobster abundance steadily grew from 2012 through 2014, with a drop in 2015, and then stabilized through 2016.
+Overall, spiny lobster abundance has increased at all sites from 2012 to 2017. At the non-MPA sites (AQUE, CARP, and MOHK), fishing pressure has decreased from 2012 to 2017. All sites besides CARP experienced a decrease in spiny lobster abundance in 2015.
+
+At the non-MPA sites, fishing pressure and spiny lobster abundance are inversely proportional; that is, the abundance never increased with fishing pressure. At AQUE, spiny lobster abundance has stayed relatively low from 2012 to 2017, with a slight increase during 2013. Fishing pressure at this site remained relatively high until 2016 where there is a steep drop off. At CARP, spiny lobster abundance also stayed relatively low until 2015 where it started to drastically increase and continued to do so through 2016. Fishing pressure at this site was high until a massive decrease in 2016, coinciding with the spike in abundance. At MOHK, spiny lobster abundance decreased in 2012, slightly increased in 2013, massively increased in 2014, and then began slightly decreasing from 2015 to 2017. Overall, fishing pressure has decreased over time and abundance has increased over time, and this trend can be seen most clearly at CARP.
+
+The two MPA sites exhibit different trends in lobster abundance over time. At the MPA site IVEE, spiny lobster abundance started low in 2012 then increased through 2014, with a drop in 2015, then a drastic rise through 2016. At the MPA site NAPL, spiny lobster abundance steadily grew from 2012 through 2014, with a drop in 2015, and then stabilized through 2016.
   
-Surprisingly, there aren’t overarching trends that show an association between MPA designation and lobster population abundance. Thus, there is an underlying driver of population abundances other than fishing pressure and MPA designation alone. 
+It is interesting to note that there are not overarching trends that show an association between MPA designation and lobster  abundance over time. The site with the lowest lobster abundance is a non-MPA (AQUE), but CARP, also a non-MPA site, had the highest abundance in 2017. While the site with the second-highest abundance is an MPA (IVEE), the other MPA (NAPL) had a lower 2017 lobster abundance than two non-MPAs (CARP and MOHK). This shows that fishing pressure and MPA designation alone do not explain lobster abundance.
 
 ```{r echo = FALSE, message = FALSE}
 
