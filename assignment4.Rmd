@@ -458,9 +458,9 @@ TukeyHSD(size_2012_anova)
 
 We found that lobster sizes, measured by carapace length, across sites between 2012 and 2017 were fairly normally distributed. Thus, we proceeded with two-sample, two-tailed t-tests to compare lobster sizes between the two sampling years. This test was repeated across all sites. The two sites with significant differences in lobster size betwen 2012 and 2017 were NAPL, an MPA site, and MOHK, a non-MPA site.
 
-In IVEE and NAPL, the two MPA sites, mean lobster size increased from 2012 to 2017. Isla Vista showed a significant difference in lobster mean sizes between 2012 and 2017 (t (28.09) = -2.20, _p_ = 0.04, $\alpha$ = 0.05), with mean lobster size increasing from 66.08±12.09 mm to 71.45±14.32 mm. NAPL also increased over time from 73.00±11.75 mm to 76.23±11.39 mm, although these results were not statistically significant (t (5.52) = -0.66, _p_ = 0.54, $\alpha$ = 0.05).  Overall, MPA designation appears to positively impact lobster size.
+In IVEE and NAPL, the two MPA sites, mean lobster size increased from 2012 to 2017. Isla Vista showed a significant difference in lobster mean sizes between 2012 and 2017 (t (28.09) = -2.20, _p_ = 0.04, $\alpha$ = 0.05, Cohen's *d* = 0.38), with mean lobster size increasing from 66.08±12.09 mm to 71.45±14.32 mm. NAPL also increased over time from 73.00±11.75 mm to 76.23±11.39 mm, although these results were not statistically significant (t (5.52) = -0.66, _p_ = 0.54, $\alpha$ = 0.05, Cohen's *d* = 0.28).  Overall, MPA designation appears to positively impact lobster size.
 
-Unlike the MPA sites, there is no consistency between AQUE, MOHK, and CARP, the non-MPA sites, on lobster size differences between 2012 and 2017. AQUE mean lobster size increased from 71.00±10.15 mm to 73.90±11.90 mm, although these resuls were not statistically significant (t (87.35) = -1.32, _p_ = 0.19, $\alpha$ = 0.05). CARP, on the other hand, showed a decrease in mean lobster size from 74.36±14.62 mm to 72.23±13.21 mm, although this also was not statistically significant (t (91.46) = 1.23, _p_ = 0.22, $\alpha$ = 0.05). MOHK, on the other hand, showed a significant difference in size between years (t (142.79) = 3.89, _p_ < 0.01, $\alpha$ = 0.05), with lobster size decreasing from 77.25±10.59 mm to 72.00±9.28 mm. These data also highlight the trend between abundance and mean lobster size. AQUE abundance did not change drastically over time, so neither did its mean lobster size. However, abundance did increase at MOHK and CARP, followed by a decrease in mean lobster size.
+Unlike the MPA sites, there is no consistency between AQUE, MOHK, and CARP, the non-MPA sites, on lobster size differences between 2012 and 2017. AQUE mean lobster size increased from 71.00±10.15 mm to 73.90±11.90 mm, although these resuls were not statistically significant (t (87.35) = -1.32, _p_ = 0.19, $\alpha$ = 0.05, Cohen's *d* = 0.26). CARP, on the other hand, showed a decrease in mean lobster size from 74.36±14.62 mm to 72.23±13.21 mm, although this also was not statistically significant (t (91.46) = 1.23, _p_ = 0.22, $\alpha$ = 0.05, Cohen's *d* = 0.16). MOHK, on the other hand, showed a significant difference in size between years (t (142.79) = 3.89, _p_ < 0.01, $\alpha$ = 0.05, Cohen's *d* = 0.54), with lobster size decreasing from 77.25±10.59 mm to 72.00±9.28 mm. These data also highlight the trend between abundance and mean lobster size. AQUE abundance did not change drastically over time, so neither did its mean lobster size. However, abundance did increase at MOHK and CARP, followed by a decrease in mean lobster size.
 
 
 
@@ -508,9 +508,13 @@ size_chi
 # p = .00099, sig diff
 
 ```
-**_Proportion of legal lobsters at each site in 2017_**
+**_Proportion of legal lobsters across sites in 2017_**
 
-We found proportions of “legal” sized lobsters (>82.6 mm carapace length) in catch across sites in 2017 to be significantly different ($\chi$^2^(4) = 18.50, _p_ < 0.001, $\alpha$ = 0.05). Coinciding with our lobster size results across all sites for 2017, we found that NAPL has the greatest proportion of “legal” sized lobsters. 
+We found proportions of “legal” sized lobsters (>82.6 mm carapace length) across sites in 2017 to be significantly different ($\chi$^2^(4) = 18.50, _p_ < 0.001, $\alpha$ = 0.05). Just as we found that NAPL had the greatest mean lobster size across all sites for 2017, we similarly found that NAPL has the greatest proportion of “legal” sized lobsters (33%).
+
+Of the non-MPA sites, 25% of CARP lobsters were "legal" sized, and 24% of AQUE lobsters were "legal" sized. The other MPA, IVEE, had 21% "legal" sized lobsters, while MOHK had the lowest proportion of "legal" sized lobsters (13%).
+
+Again, these data show that there is no clear relationship between MPA designation and lobster size. While the MPA NAPL had the highest proportion of "legal" lobsters, the MPA IVEE had the second-lowest proportion of "legal" lobsters.  However, is consistent with our findings above that, although IVEE had smaller lobsters, it had a higher overall abundance of lobsters.
 
 
 # Conclusions
@@ -518,7 +522,7 @@ Across all sites and throughout our analyses, we found that MPA designation is n
 
 Given that spiny lobsters remain, and will remain, economically important for both California and Mexico, understanding the implications of managed and protected lobster habitats is vital for the future of the species and the fishery.
 
-In this study, our response variables are spiny lobster abundance and carapace length (in mm), which are common variables in quantifying community structure. However, our explanatory variables are only MPA designation and fishing pressure, which are not sufficient enough predictors of lobster community to make any reliable claims.  Food availability, water quality, predation pressure, temperature, and other biotic and abiotic factors must also be taken into account when trying to analyze these different sites. Without including these variables, we can only assume that MPA designation will have some sort of variation even though we can’t quantify it with this data.
+In this study, our response variables are spiny lobster abundance and carapace length (in mm), which are common variables in quantifying community structure. However, our explanatory variables are only MPA designation and fishing pressure, which are not sufficient enough predictors of lobster community to make any reliable claims.  Food availability, water quality, predation pressure, temperature, and other biotic and abiotic factors must also be taken into account when trying to analyze these different sites. Without including these variables, we can only assume that MPA designation will have some sort of variation even though we cannot quantify it with this data.
 
 # References
 1. Holthuis, LB. 1991. “_Panulirus interruptus_”. FAO Species Catalogue, Volume 13. Marine Lobsters of the World. FAO Fisheries Synopsis No. 125. Food and Agriculture Organization. Pp. 142-143. ISBN 95-5-103027-8.
